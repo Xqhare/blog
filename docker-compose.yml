@@ -1,0 +1,9 @@
+services:
+  webserver:
+    image: nginx:alpine
+    container_name: web.service-blog
+    restart: always
+    ports:
+      - "51:80"
+    volumes:
+      - ./html:/usr/share/nginx/html:ro
