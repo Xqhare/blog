@@ -4,4 +4,9 @@
 
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$THIS_DIR"
-./build.sh && ./deploy.sh
+if ./build.sh; then
+	./deploy.sh
+else
+	echo "Building failed; not deploying"
+	exit 1
+fi
