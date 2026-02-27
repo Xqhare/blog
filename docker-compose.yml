@@ -7,3 +7,4 @@ services:
       - "51:80"
     volumes:
       - ./html:/usr/share/nginx/html:ro
+      - ./data:/usr/share/nginx/data:ro
