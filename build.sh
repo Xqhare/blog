@@ -107,8 +107,8 @@ echo "Building landing page..."
 LANDING_MD_TMP="$THIS_DIR/build/landing_tmp.md"
 cp "$THIS_DIR/pages/landing.md" "$LANDING_MD_TMP"
 if grep -q "\[Latest Post Preview Placeholder\]" "$LANDING_MD_TMP"; then
-    sed -i "/\[Latest Post Preview Placeholder\]/r $LATEST_SNIPPET_FILE" "$LANDING_MD_TMP"
-    sed -i "s/\[Latest Post Preview Placeholder\]//" "$LANDING_MD_TMP"
+    # Replace the line containing the placeholder with the content of the snippet
+    sed -i -e "/\[Latest Post Preview Placeholder\]/r $LATEST_SNIPPET_FILE" -e "/\[Latest Post Preview Placeholder\]/d" "$LANDING_MD_TMP"
 fi
 
 pandoc -f gfm -t html \
@@ -127,8 +127,8 @@ echo "Building archive page..."
 CONTENTS_MD_TMP="$THIS_DIR/build/contents_tmp.md"
 cp "$THIS_DIR/pages/contents.md" "$CONTENTS_MD_TMP"
 if grep -q "\[All Posts Placeholder\]" "$CONTENTS_MD_TMP"; then
-    sed -i "/\[All Posts Placeholder\]/r $ALL_SNIPPETS_FILE" "$CONTENTS_MD_TMP"
-    sed -i "s/\[All Posts Placeholder\]//" "$CONTENTS_MD_TMP"
+    # Replace the line containing the placeholder with the content of the snippets
+    sed -i -e "/\[All Posts Placeholder\]/r $ALL_SNIPPETS_FILE" -e "/\[All Posts Placeholder\]/d" "$CONTENTS_MD_TMP"
 fi
 
 pandoc -f gfm -t html \
