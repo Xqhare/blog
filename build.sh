@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 echo "------------------------------------------------"
 echo #
@@ -64,8 +65,8 @@ for post_dir in "$THIS_DIR/pages/posts/"*; do
             mkdir -p "$THIS_DIR/build/posts/$post_name"
             
             # Copy assets (like images) if any
-            cp "$post_dir/"* "$THIS_DIR/build/posts/$post_name/" 2>/dev/null
-            rm "$THIS_DIR/build/posts/$post_name/post.md" 2>/dev/null
+            cp "$post_dir/"* "$THIS_DIR/build/posts/$post_name/" 2>/dev/null || true
+            rm "$THIS_DIR/build/posts/$post_name/post.md" 2>/dev/null || true
 
             pandoc -f gfm -t html \
                 --template="$TEMPLATE_FILE" \
@@ -97,6 +98,7 @@ ls -r "$THIS_DIR/build/snippets/"*.snippet.html 2>/dev/null | head -n 1 | xargs 
 echo "Building landing page..."
 LANDING_MD_TMP="$THIS_DIR/build/landing_tmp.md"
 cp "$THIS_DIR/pages/landing.md" "$LANDING_MD_TMP"
+# Use a placeholder in the landing.md to insert the snippets
 if grep -q "\[Latest Post Preview Placeholder\]" "$LANDING_MD_TMP"; then
     sed -i "/\[Latest Post Preview Placeholder\]/r $LATEST_SNIPPET_FILE" "$LANDING_MD_TMP"
     sed -i "s/\[Latest Post Preview Placeholder\]//" "$LANDING_MD_TMP"
@@ -109,6 +111,7 @@ pandoc -f gfm -t html \
     --include-after-body="$FOOTER_FILE" \
     -o "$THIS_DIR/build/landing.html" \
     "$LANDING_MD_TMP"
+
 echo "Landing page built."
 echo #
 
@@ -128,6 +131,7 @@ pandoc -f gfm -t html \
     --include-after-body="$FOOTER_FILE" \
     -o "$THIS_DIR/build/ContentsTable/index.html" \
     "$CONTENTS_MD_TMP"
+
 echo "Archive page built."
 echo #
 

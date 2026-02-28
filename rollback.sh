@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 # rollback.sh for blog service
 # Reverts the index.html, posts, and ContentsTable symlinks to the second latest version in the data directory.
