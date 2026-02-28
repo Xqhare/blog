@@ -84,21 +84,28 @@ echo #
 # Build All Snippets (Archive)
 echo "Preparing archive snippets..."
 ALL_SNIPPETS_FILE="$THIS_DIR/build/all_snippets.html"
-echo "" > "$ALL_SNIPPETS_FILE"
-for snippet in $(ls -r "$THIS_DIR/build/snippets/"*.snippet.html 2>/dev/null); do
-    cat "$snippet" >> "$ALL_SNIPPETS_FILE"
-done
+ls -r "$THIS_DIR/build/snippets/"*.snippet.html 2>/dev/null > "$THIS_DIR/build/snippet_list.txt" || true
+if [ -s "$THIS_DIR/build/snippet_list.txt" ]; then
+    xargs cat < "$THIS_DIR/build/snippet_list.txt" > "$ALL_SNIPPETS_FILE"
+    echo "Found $(wc -l < "$THIS_DIR/build/snippet_list.txt") snippets for archive."
+else
+    echo "WARNING: No snippets found for archive."
+    echo "" > "$ALL_SNIPPETS_FILE"
+fi
 
 # Build Latest Snippet (Landing)
 echo "Preparing latest snippet..."
 LATEST_SNIPPET_FILE="$THIS_DIR/build/latest_snippet.html"
-ls -r "$THIS_DIR/build/snippets/"*.snippet.html 2>/dev/null | head -n 1 | xargs cat > "$LATEST_SNIPPET_FILE" 2>/dev/null
+if [ -s "$THIS_DIR/build/snippet_list.txt" ]; then
+    head -n 1 "$THIS_DIR/build/snippet_list.txt" | xargs cat > "$LATEST_SNIPPET_FILE"
+else
+    echo "" > "$LATEST_SNIPPET_FILE"
+fi
 
 # Build Landing Page
 echo "Building landing page..."
 LANDING_MD_TMP="$THIS_DIR/build/landing_tmp.md"
 cp "$THIS_DIR/pages/landing.md" "$LANDING_MD_TMP"
-# Use a placeholder in the landing.md to insert the snippets
 if grep -q "\[Latest Post Preview Placeholder\]" "$LANDING_MD_TMP"; then
     sed -i "/\[Latest Post Preview Placeholder\]/r $LATEST_SNIPPET_FILE" "$LANDING_MD_TMP"
     sed -i "s/\[Latest Post Preview Placeholder\]//" "$LANDING_MD_TMP"
