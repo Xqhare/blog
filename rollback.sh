@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # rollback.sh for blog service
-# Reverts the index.html and posts symlinks to the second latest version in the data directory.
+# Reverts the index.html, posts, and ContentsTable symlinks to the second latest version in the data directory.
 
 echo "------------------------------------------------"
 echo #
@@ -36,6 +36,10 @@ ln -s -f "../data/$PREVIOUS_VERSION/index.html" "index.html"
 # Update posts symlink
 rm -f "posts"
 ln -s -f "../data/$PREVIOUS_VERSION/posts" "posts"
+
+# Update ContentsTable symlink
+rm -f "ContentsTable"
+ln -s -f "../data/$PREVIOUS_VERSION/ContentsTable" "ContentsTable"
 
 echo "Rollback for blog service complete."
 echo "- - - - - - - - - - - - - - - - - - - - - - - -"

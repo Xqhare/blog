@@ -31,6 +31,7 @@ echo "Deploying blog pages..."
 echo "Moving build data to data directory..."
 mv "$BUILD_DIR/landing.html" "$DEPLOYMENT_DIR/index.html"
 mv "$BUILD_DIR/posts" "$DEPLOYMENT_DIR/posts"
+mv "$BUILD_DIR/ContentsTable" "$DEPLOYMENT_DIR/ContentsTable"
 echo "Moving done."
 echo #
 
@@ -47,6 +48,10 @@ ln -s -f "../data/$(basename "$DEPLOYMENT_DIR")/index.html" "index.html"
 # Symlink the posts directory
 rm -f "$THIS_DIR/html/posts"
 ln -s -f "../data/$(basename "$DEPLOYMENT_DIR")/posts" "posts"
+
+# Symlink the ContentsTable directory
+rm -f "$THIS_DIR/html/ContentsTable"
+ln -s -f "../data/$(basename "$DEPLOYMENT_DIR")/ContentsTable" "ContentsTable"
 echo "Symlinks created."
 echo #
 

@@ -13,6 +13,7 @@ if test -d "$THIS_DIR/build"; then
 fi
 mkdir -p "$THIS_DIR/build"
 mkdir -p "$THIS_DIR/build/posts"
+mkdir -p "$THIS_DIR/build/ContentsTable"
 echo "Setting up environment done."
 echo "- - - - - - - - - - - - - - - - - - - - - - - -"
 echo #
@@ -79,26 +80,26 @@ done
 echo "Individual posts built."
 echo #
 
-# Build landing page
-echo "Building landing page..."
-SNIPPETS_FILE="$THIS_DIR/build/all_snippets.html"
-echo "" > "$SNIPPETS_FILE"
-# Add snippets in reverse order (assuming they are named by date or newest first)
-# For now, just alphabetical reverse
+# Build All Snippets (Archive)
+echo "Preparing archive snippets..."
+ALL_SNIPPETS_FILE="$THIS_DIR/build/all_snippets.html"
+echo "" > "$ALL_SNIPPETS_FILE"
 for snippet in $(ls -r "$THIS_DIR/build/snippets/"*.snippet.html 2>/dev/null); do
-    cat "$snippet" >> "$SNIPPETS_FILE"
+    cat "$snippet" >> "$ALL_SNIPPETS_FILE"
 done
 
-# Create temporary landing markdown with snippets injected
+# Build Latest Snippet (Landing)
+echo "Preparing latest snippet..."
+LATEST_SNIPPET_FILE="$THIS_DIR/build/latest_snippet.html"
+ls -r "$THIS_DIR/build/snippets/"*.snippet.html 2>/dev/null | head -n 1 | xargs cat > "$LATEST_SNIPPET_FILE" 2>/dev/null
+
+# Build Landing Page
+echo "Building landing page..."
 LANDING_MD_TMP="$THIS_DIR/build/landing_tmp.md"
 cp "$THIS_DIR/pages/landing.md" "$LANDING_MD_TMP"
-# Use a placeholder in the landing.md to insert the snippets
 if grep -q "\[Latest Post Preview Placeholder\]" "$LANDING_MD_TMP"; then
-    sed -i "/\[Latest Post Preview Placeholder\]/r $SNIPPETS_FILE" "$LANDING_MD_TMP"
+    sed -i "/\[Latest Post Preview Placeholder\]/r $LATEST_SNIPPET_FILE" "$LANDING_MD_TMP"
     sed -i "s/\[Latest Post Preview Placeholder\]//" "$LANDING_MD_TMP"
-else
-    echo "WARNING: Placeholder [Latest Post Preview Placeholder] not found in landing.md. Appending snippets to end."
-    cat "$SNIPPETS_FILE" >> "$LANDING_MD_TMP"
 fi
 
 pandoc -f gfm -t html \
@@ -108,8 +109,26 @@ pandoc -f gfm -t html \
     --include-after-body="$FOOTER_FILE" \
     -o "$THIS_DIR/build/landing.html" \
     "$LANDING_MD_TMP"
-
 echo "Landing page built."
+echo #
+
+# Build Contents Table (Archive Page)
+echo "Building archive page..."
+CONTENTS_MD_TMP="$THIS_DIR/build/contents_tmp.md"
+cp "$THIS_DIR/pages/contents.md" "$CONTENTS_MD_TMP"
+if grep -q "\[All Posts Placeholder\]" "$CONTENTS_MD_TMP"; then
+    sed -i "/\[All Posts Placeholder\]/r $ALL_SNIPPETS_FILE" "$CONTENTS_MD_TMP"
+    sed -i "s/\[All Posts Placeholder\]//" "$CONTENTS_MD_TMP"
+fi
+
+pandoc -f gfm -t html \
+    --template="$TEMPLATE_FILE" \
+    --include-in-header="$STYLE_FILE" \
+    --include-before-body="$HEADER_FILE" \
+    --include-after-body="$FOOTER_FILE" \
+    -o "$THIS_DIR/build/ContentsTable/index.html" \
+    "$CONTENTS_MD_TMP"
+echo "Archive page built."
 echo #
 
 echo "Building blog pages done."
