@@ -4,45 +4,125 @@ echo "------------------------------------------------"
 echo #
 echo "Blog web service building script started"
 echo #
-echo "Setting up environment"
+
+echo "Setting up environment..."
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 if test -d "$THIS_DIR/build"; then
-	echo "Emptying old blog build directory"
-	rm -rf "$THIS_DIR/build"
+        echo "Emptying old blog build directory..."
+        rm -rf "$THIS_DIR/build"
 fi
 mkdir -p "$THIS_DIR/build"
-
-echo "Setting up environment done"
+mkdir -p "$THIS_DIR/build/posts"
+echo "Setting up environment done."
+echo "- - - - - - - - - - - - - - - - - - - - - - - -"
 echo #
-echo "Rebuild global assets"
 
+echo "Rebuilding global assets..."
 if test -d "$THIS_DIR/../global_assets"; then
         cd "$THIS_DIR/../global_assets"
         ./build.sh
         cd "$THIS_DIR"
 else
-        echo "Missing global assets directory at $THIS_DIR/../global_assets"
+        echo "ERROR: Missing global assets directory at $THIS_DIR/../global_assets"
         exit 1
 fi
-
-echo #
-echo "Rebuilding global assets done"
+echo "Rebuilding global assets done."
 echo "- - - - - - - - - - - - - - - - - - - - - - - -"
 echo #
-echo "Building blog post snippets"
+
+echo "Building blog post snippets..."
 ./build_snippets.sh
-echo #
-echo "Blog post snippets built"
+echo "Blog post snippets built."
 echo "- - - - - - - - - - - - - - - - - - - - - - - -"
+echo #
 
-
-
-
-
-
-
-echo "Building blog pages"
-
+echo "Building blog pages..."
 FOOTER_FILE="$THIS_DIR/../global_assets/build/footer.html"
 HEADER_FILE="$THIS_DIR/../global_assets/build/header.html"
 STYLE_FILE="$THIS_DIR/../global_assets/build/style.html"
+TEMPLATE_FILE="$THIS_DIR/../global_assets/templates/landing.html"
+
+echo "Copying global logo and favicon..."
+cp "$THIS_DIR/../global_assets/build/logo.png" "$THIS_DIR/build/logo.png"
+cp "$THIS_DIR/../global_assets/build/favicon.png" "$THIS_DIR/build/favicon.png"
+echo "Copying logo assets done."
+echo #
+
+# Build individual posts
+echo "Building individual posts..."
+for post_dir in "$THIS_DIR/pages/posts/"*; do
+    if [ -d "$post_dir" ]; then
+        post_name=$(basename "$post_dir")
+        if [ "$post_name" == "template_dir" ]; then
+            continue
+        fi
+
+        post_file="$post_dir/post.md"
+        if [ -f "$post_file" ]; then
+            echo "Processing post: $post_name"
+            mkdir -p "$THIS_DIR/build/posts/$post_name"
+            
+            # Copy assets (like images) if any
+            cp "$post_dir/"* "$THIS_DIR/build/posts/$post_name/" 2>/dev/null
+            rm "$THIS_DIR/build/posts/$post_name/post.md" 2>/dev/null
+
+            pandoc -f gfm -t html \
+                --template="$TEMPLATE_FILE" \
+                --include-in-header="$STYLE_FILE" \
+                --include-before-body="$HEADER_FILE" \
+                --include-after-body="$FOOTER_FILE" \
+                -o "$THIS_DIR/build/posts/$post_name/index.html" \
+                "$post_file"
+        fi
+    fi
+done
+echo "Individual posts built."
+echo #
+
+# Build landing page
+echo "Building landing page..."
+SNIPPETS_FILE="$THIS_DIR/build/all_snippets.html"
+echo "" > "$SNIPPETS_FILE"
+# Add snippets in reverse order (assuming they are named by date or newest first)
+# For now, just alphabetical reverse
+for snippet in $(ls -r "$THIS_DIR/build/snippets/"*.snippet.html 2>/dev/null); do
+    cat "$snippet" >> "$SNIPPETS_FILE"
+done
+
+# Create temporary landing markdown with snippets injected
+LANDING_MD_TMP="$THIS_DIR/build/landing_tmp.md"
+cp "$THIS_DIR/pages/landing.md" "$LANDING_MD_TMP"
+# Use a placeholder in the landing.md to insert the snippets
+# We'll use perl for a robust multiline replacement if needed, 
+# or just append for now if placeholder not found
+if grep -q "\[Latest Post Preview Placeholder\]" "$LANDING_MD_TMP"; then
+    # Escape snippets for sed (simplified, better to use a dedicated tool or temp files)
+    # Actually, pandoc --metadata-file might be better, but let's keep it simple
+    # We'll use a temporary file to hold the content
+    sed -i "/\[Latest Post Preview Placeholder\]/r $SNIPPETS_FILE" "$LANDING_MD_TMP"
+    sed -i "s/\[Latest Post Preview Placeholder\]//" "$LANDING_MD_TMP"
+else
+    echo "WARNING: Placeholder [Latest Post Preview Placeholder] not found in landing.md. Appending snippets to end."
+    cat "$SNIPPETS_FILE" >> "$LANDING_MD_TMP"
+fi
+
+pandoc -f gfm -t html \
+    --template="$TEMPLATE_FILE" \
+    --include-in-header="$STYLE_FILE" \
+    --include-before-body="$HEADER_FILE" \
+    --include-after-body="$FOOTER_FILE" \
+    -o "$THIS_DIR/build/landing.html" \
+    "$LANDING_MD_TMP"
+
+echo "Landing page built."
+echo #
+
+echo "Building blog pages done."
+echo "- - - - - - - - - - - - - - - - - - - - - - - -"
+echo #
+
+echo "------------------------------------------------"
+echo #
+echo "Blog web service building script finished"
+echo #
+exit 0

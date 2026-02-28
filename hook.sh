@@ -1,14 +1,25 @@
 #!/usr/bin/env bash
 
-# Called after a git push
+echo "------------------------------------------------"
+echo #
+echo "Blog web service hook script started"
+echo #
 
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$THIS_DIR"
+
 if ./build.sh; then
-	./deploy.sh
+        ./deploy.sh
         cd "$THIS_DIR/.."
         ./cleanup_data.sh
 else
-	echo "Building failed; not deploying"
-	exit 1
+        echo "ERROR: Building failed; not deploying."
+        echo "------------------------------------------------"
+        exit 1
 fi
+
+echo "------------------------------------------------"
+echo #
+echo "Blog web service hook script finished"
+echo #
+exit 0
