@@ -41,8 +41,6 @@ echo "Rollback for blog service complete."
 echo "- - - - - - - - - - - - - - - - - - - - - - - -"
 echo #
 
-echo "------------------------------------------------"
-echo #
 echo "Rolling back blog web service script finished"
-echo #
+echo "------------------------------------------------"
 exit 0

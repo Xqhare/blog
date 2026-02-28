@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
 
-# Sub-script for `build.sh`
-# Not designed to be run standalone
-
 echo "------------------------------------------------"
 echo #
 echo "Blog post snippet building script started"
 echo #
-echo "Checking environment"
+
+echo "Checking environment..."
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 BUILD_DIR="$THIS_DIR/build"
 # This script assumes that the blog build directory has been handled already
 if ! test -d "$BUILD_DIR"; then
-        echo "Missing blog build directory at $BUILD_DIR"
+        echo "ERROR: Missing blog build directory at $BUILD_DIR"
         exit 1
 fi
 
@@ -24,14 +22,14 @@ mkdir -p "$SNIPPETS_BUILD_DIR"
 
 TEMPLATE_SNIPPET="$THIS_DIR/../global_assets/templates/blog_snippet.html"
 if ! test -f "$TEMPLATE_SNIPPET"; then
-    echo "Missing template snippet at $TEMPLATE_SNIPPET"
+    echo "ERROR: Missing template snippet at $TEMPLATE_SNIPPET"
     exit 1
 fi
-
-echo "Checking environment done"
+echo "Checking environment done."
 echo "- - - - - - - - - - - - - - - - - - - - - - - -"
 echo #
-echo "Building blog post snippets"
+
+echo "Building blog post snippets..."
 
 # Loop through each post directory
 for post_dir in "$THIS_DIR/pages/posts/"*; do
@@ -46,7 +44,6 @@ for post_dir in "$THIS_DIR/pages/posts/"*; do
         if [ -f "$post_file" ]; then
             echo "Processing snippet for: $post_name"
             # Use pandoc to create the snippet from the front-matter of the post
-            # We use an empty body because we only want the template metadata
             pandoc "$post_file" \
                 --template="$TEMPLATE_SNIPPET" \
                 -t html \
@@ -54,7 +51,10 @@ for post_dir in "$THIS_DIR/pages/posts/"*; do
         fi
     fi
 done
-
+echo "Building blog post snippets done."
+echo "- - - - - - - - - - - - - - - - - - - - - - - -"
 echo #
+
 echo "Blog post snippet building script finished"
 echo "------------------------------------------------"
+exit 0

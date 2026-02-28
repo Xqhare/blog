@@ -18,8 +18,6 @@ else
         exit 1
 fi
 
-echo "------------------------------------------------"
-echo #
 echo "Blog web service hook script finished"
-echo #
+echo "------------------------------------------------"
 exit 0

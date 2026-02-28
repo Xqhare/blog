@@ -45,7 +45,6 @@ cd "$THIS_DIR/html"
 ln -s -f "../data/$(basename "$DEPLOYMENT_DIR")/index.html" "index.html"
 
 # Symlink the posts directory
-# We remove the old symlink first to be safe
 rm -f "$THIS_DIR/html/posts"
 ln -s -f "../data/$(basename "$DEPLOYMENT_DIR")/posts" "posts"
 echo "Symlinks created."
@@ -55,8 +54,6 @@ echo "Deploying blog pages done."
 echo "- - - - - - - - - - - - - - - - - - - - - - - -"
 echo #
 
-echo "------------------------------------------------"
-echo #
 echo "Deploying blog web service script finished"
-echo #
+echo "------------------------------------------------"
 exit 0

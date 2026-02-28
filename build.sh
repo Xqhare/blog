@@ -93,12 +93,7 @@ done
 LANDING_MD_TMP="$THIS_DIR/build/landing_tmp.md"
 cp "$THIS_DIR/pages/landing.md" "$LANDING_MD_TMP"
 # Use a placeholder in the landing.md to insert the snippets
-# We'll use perl for a robust multiline replacement if needed, 
-# or just append for now if placeholder not found
 if grep -q "\[Latest Post Preview Placeholder\]" "$LANDING_MD_TMP"; then
-    # Escape snippets for sed (simplified, better to use a dedicated tool or temp files)
-    # Actually, pandoc --metadata-file might be better, but let's keep it simple
-    # We'll use a temporary file to hold the content
     sed -i "/\[Latest Post Preview Placeholder\]/r $SNIPPETS_FILE" "$LANDING_MD_TMP"
     sed -i "s/\[Latest Post Preview Placeholder\]//" "$LANDING_MD_TMP"
 else
@@ -121,8 +116,6 @@ echo "Building blog pages done."
 echo "- - - - - - - - - - - - - - - - - - - - - - - -"
 echo #
 
-echo "------------------------------------------------"
-echo #
 echo "Blog web service building script finished"
-echo #
+echo "------------------------------------------------"
 exit 0
