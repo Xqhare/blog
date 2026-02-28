@@ -13,5 +13,3 @@ abstract: "The first blog post on the new blog system."
 This is the first post on the new blog system. It is meant to be used for testing the build script and the overall structure of the blog.
 
 ![Post Image](test_asset.jpeg)
-
-This post contains some content to verify the Markdown conversion process.
