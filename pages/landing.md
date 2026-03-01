@@ -7,11 +7,7 @@ tags: [meta, blog]
 description: "Welcome to my personal blog."
 ---
 
-# Welcome to Xqhare's Blog
-
-This is the main landing page for the xqhare.net blog. 
-
-Here I share my thoughts on software engineering, world-building, and wherever my mind wanders next.
+Welcome to the place where I share my thoughts on software engineering, world-building, and wherever my mind wanders next.
 
 ## Latest Posts
 
