@@ -6,7 +6,7 @@ echo #
 echo "Blog post snippet building script started"
 echo #
 
-echo "Checking environment..."
+echo "Setting up environment..."
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 BUILD_DIR="$THIS_DIR/build"
 # This script assumes that the blog build directory has been handled already
@@ -17,6 +17,7 @@ fi
 
 SNIPPETS_BUILD_DIR="$BUILD_DIR/snippets"
 if test -d "$SNIPPETS_BUILD_DIR"; then
+    echo "Emptying old snippets build directory..."
     rm -rf "$SNIPPETS_BUILD_DIR"
 fi
 mkdir -p "$SNIPPETS_BUILD_DIR"
@@ -26,7 +27,7 @@ if ! test -f "$TEMPLATE_SNIPPET"; then
     echo "ERROR: Missing template snippet at $TEMPLATE_SNIPPET"
     exit 1
 fi
-echo "Checking environment done."
+echo "Setting up environment done."
 echo "- - - - - - - - - - - - - - - - - - - - - - - -"
 echo #
 
@@ -43,6 +44,7 @@ for post_dir in "$THIS_DIR/pages/posts/"*; do
 
         post_file="$post_dir/post.md"
         if [ -f "$post_file" ]; then
+            echo #
             echo "Processing snippet for: $post_name"
             # Use pandoc to create the snippet from the front-matter of the post
             pandoc "$post_file" \
@@ -52,6 +54,7 @@ for post_dir in "$THIS_DIR/pages/posts/"*; do
         fi
     fi
 done
+echo #
 echo "Building blog post snippets done."
 echo "- - - - - - - - - - - - - - - - - - - - - - - -"
 echo #

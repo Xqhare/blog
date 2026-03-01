@@ -34,6 +34,7 @@ echo #
 
 echo "Building blog post snippets..."
 ./build_snippets.sh
+echo #
 echo "Blog post snippets built."
 echo "- - - - - - - - - - - - - - - - - - - - - - - -"
 echo #
@@ -61,6 +62,7 @@ for post_dir in "$THIS_DIR/pages/posts/"*; do
 
         post_file="$post_dir/post.md"
         if [ -f "$post_file" ]; then
+            echo #
             echo "Processing post: $post_name"
             mkdir -p "$THIS_DIR/build/posts/$post_name"
             
@@ -78,11 +80,13 @@ for post_dir in "$THIS_DIR/pages/posts/"*; do
         fi
     fi
 done
+echo #
 echo "Individual posts built."
 echo #
 
 # Build All Snippets (Archive)
 echo "Preparing archive snippets..."
+echo #
 ALL_SNIPPETS_FILE="$THIS_DIR/build/all_snippets.html"
 ls -r "$THIS_DIR/build/snippets/"*.snippet.html 2>/dev/null > "$THIS_DIR/build/snippet_list.txt" || true
 if [ -s "$THIS_DIR/build/snippet_list.txt" ]; then
@@ -102,6 +106,11 @@ else
     echo "" > "$LATEST_SNIPPET_FILE"
 fi
 
+echo #
+echo "All snippets prepared."
+echo "- - - - - - - - - - - - - - - - - - - - - - - -"
+echo #
+
 # Build Landing Page
 echo "Building landing page..."
 LANDING_MD_TMP="$THIS_DIR/build/landing_tmp.md"
@@ -119,11 +128,14 @@ pandoc -f gfm -t html \
     -o "$THIS_DIR/build/landing.html" \
     "$LANDING_MD_TMP"
 
+echo #
 echo "Landing page built."
+echo "- - - - - - - - - - - - - - - - - - - - - - - -"
 echo #
 
 # Build Contents Table (Archive Page)
 echo "Building archive page..."
+echo #
 CONTENTS_MD_TMP="$THIS_DIR/build/contents_tmp.md"
 cp "$THIS_DIR/pages/contents.md" "$CONTENTS_MD_TMP"
 if grep -q "\[All Posts Placeholder\]" "$CONTENTS_MD_TMP"; then
