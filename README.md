@@ -2,57 +2,57 @@
 
 Blog page service for xqhare.net.
 
-This service is used to host a GitHub README as a HTML page.
-
 The page is updated using a `post-receive` hook on the `gitea` server.
 
 For more details [see here](https://github.com/xqhare/xqhare.net/).
 
-Every blog post can be converted into a full HTML file, as well as an HTML snippet for previews.
+Every blog post is converted into a full HTML file, as well as an HTML snippet for previews.
 
 ## Structure
 
 A blog requires a somewhat different structure from the rest of the project.
 
-The structure shown below is the finished HTML structure for the blog pages.
+The structure shown below is the finished HTML structure for the blog pages (managed via symlinks).
 
 - `blog/`
-  - `index.html` - landing page for the blog (mainly static with a preview of the latest post and a link to the table of contents)
+  - `index.html` - landing page for the blog (features the latest post preview)
   - `ContentsTable/`
-    - `index.html` - table of contents for the blog (all blog posts as previews ordered with the latest on top)
+    - `index.html` - blog archive (all blog posts as previews, newest first)
   - `posts/`
-    - `post1/` - the name would be the title of the blog post
-      - all data needed for the post
+    - `[post_name]/`
+      - `index.html` - the full blog post
+      - assets (images, etc.)
 
-- blog
-    - pages / posts (markdown content)
-      - landing.md - landing page for the blog
-      - post1/
-        - post1.md
-        - asset.png
-    - HTML (not part of the repo - the build script creates all content inside this directory as symlinks)
-    - build.sh, etc. (build scripts)
-    - README.md
-    - docker compose (using nginx; pointing to `html` directory)
-    - (data & build directories) not part of the repo - constructed using the scripts
+Source structure:
+
+- `blog/`
+    - `pages/`
+      - `landing.md` - source for the blog home
+      - `contents.md` - source for the archive page
+      - `posts/`
+        - `[post_name]/`
+          - `post.md`
+          - `asset.png`
+    - `build.sh` - main build orchestrator
+    - `build_snippets.sh` - handles metadata extraction and snippet rendering
+    - `deploy.sh` - atomic deployment using timestamped data directories
+    - `rollback.sh` - reverts to the previous version
 
 ## Blog post previews / snippets
 
-All markdown posts will start with a YAML block.
+All markdown posts start with a YAML block.
 
-The block will have the following fields:
+Required fields:
 
-- title
-- display_title
-- date
-- author
-- tags
-- featured_image
-- abstact
+- `title`: URL-friendly slug (no spaces)
+- `display_title`: The readable title
+- `date`: YYYY-MM-DD
+- `author`: Author name
+- `tags`: [list, of, tags]
+- `featured_image`: Path to the image file (optional)
+- `abstract`: Brief summary for the snippet
 
-This data will be used to generate a preview for the blog post.
+### Visuals
 
-### Size
-
-Every snippet will be given a max height of 125px (width set automatically) for its featured image.
-A snippet itself does not have a set max size.
+Featured images in snippets are automatically scaled to a max height of 200px.
+Full posts use a responsive layout optimized for both desktop and mobile devices.
