@@ -4,11 +4,13 @@
 This directory contains the source content and configuration for Xqhare's personal blog.
 
 ## Directory Structure
-- `build.sh`: Intended to iterate through blog posts and generate an `index.html`.
-- `deploy.sh`: (Placeholder) Intended to deploy the generated HTML to the server.
+- `pages/`: Contains the Markdown sources. `landing.md` for the home page, `contents.md` for the archive, and a `posts/` subdirectory for individual blog entries.
+- `build.sh`: Main build orchestrator. Generates the landing page, the archive page (`ContentsTable`), and individual post HTML files using global templates.
+- `build_snippets.sh`: Extracts YAML metadata from posts to build HTML preview snippets.
+- `deploy.sh`: Handles atomic deployment using timestamped directories and symlinks in the `data/` and `html/` folders.
+- `rollback.sh`: Reverts the `index.html`, `posts/`, and `ContentsTable/` symlinks to the previous deployment state.
 - `hook.sh`: Triggered after a git push to rebuild and redeploy the blog.
 - `README.md`: High-level overview of the blog's purpose and status.
-- `LICENSE`: MIT License.
 
 ## Usage
-Blog posts are written in Markdown. The `build.sh` script is planned to convert these posts into HTML using `pandoc` and automatically generate an index page for `blog.xqhare.net`. Deployed automatically via the `webpage` pipeline. Refer to [../webpage_startup_notes/GEMINI.md](../webpage_startup_notes/GEMINI.md) for technical details on the build and deployment process.
+Blog posts are written in Markdown within `pages/posts/`. The `build.sh` script converts these posts into HTML using `pandoc` and the `blog_post.html` template. It also dynamically generates an index page and an archive page utilizing preview snippets. Deployed automatically via the project pipeline.
