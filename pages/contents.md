@@ -10,4 +10,6 @@ Here you can find all posts on my blog sorted in chronological order. Latest pos
 
 [All Posts Placeholder]
 
+---
+
 [Back to Blog Home](/)
