@@ -1,6 +1,7 @@
 ---
 # Title allows no whitespace - use display_title instead
 title: "Awesome_Title"
+# Title to be displayed
 display_title: "Awesome Title"
 date: 2026-02-20
 author: Xqhare
