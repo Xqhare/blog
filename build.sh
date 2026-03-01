@@ -45,6 +45,16 @@ STYLE_FILE="$THIS_DIR/../global_assets/build/style.html"
 LANDING_TEMPLATE_FILE="$THIS_DIR/../global_assets/templates/landing.html"
 POST_TEMPLATE_FILE="$THIS_DIR/../global_assets/templates/blog_post.html"
 
+# Verify templates exist
+if ! test -f "$LANDING_TEMPLATE_FILE"; then
+    echo "ERROR: Landing template not found at $LANDING_TEMPLATE_FILE"
+    exit 1
+fi
+if ! test -f "$POST_TEMPLATE_FILE"; then
+    echo "ERROR: Blog post template not found at $POST_TEMPLATE_FILE"
+    exit 1
+fi
+
 echo "Copying global logo and favicon..."
 cp "$THIS_DIR/../global_assets/build/logo.png" "$THIS_DIR/build/logo.png"
 cp "$THIS_DIR/../global_assets/build/favicon.png" "$THIS_DIR/build/favicon.png"
@@ -62,7 +72,7 @@ for post_dir in "$THIS_DIR/pages/posts/"*; do
 
         post_file="$post_dir/post.md"
         if [ -f "$post_file" ]; then
-            echo "Processing post: $post_name"
+            echo "Processing post: $post_name using $(basename "$POST_TEMPLATE_FILE")"
             mkdir -p "$THIS_DIR/build/posts/$post_name"
             
             # Copy assets (like images) if any
