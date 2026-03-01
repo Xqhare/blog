@@ -14,6 +14,7 @@ if ./build.sh; then
         cd "$THIS_DIR/.."
         ./cleanup_data.sh
 else
+        echo #
         echo "ERROR: Building failed; not deploying."
         echo "------------------------------------------------"
         exit 1
