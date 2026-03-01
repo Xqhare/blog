@@ -33,18 +33,16 @@ echo "Moving build data to data directory..."
 mv "$BUILD_DIR/landing.html" "$DEPLOYMENT_DIR/index.html"
 mv "$BUILD_DIR/posts" "$DEPLOYMENT_DIR/posts"
 mv "$BUILD_DIR/ContentsTable" "$DEPLOYMENT_DIR/ContentsTable"
+cp "$BUILD_DIR/favicon.png" "$DEPLOYMENT_DIR/favicon.png"
+cp "$BUILD_DIR/logo.png" "$DEPLOYMENT_DIR/logo.png"
 echo "Moving done."
-echo #
-
-echo "Updating favicon and logo..."
-cp "$BUILD_DIR/favicon.png" "$THIS_DIR/html/favicon.png"
-cp "$BUILD_DIR/logo.png" "$THIS_DIR/html/logo.png"
-echo "Updating favicon and logo done."
 echo #
 
 echo "Creating symlinks..."
 cd "$THIS_DIR/html"
 ln -s -f "../data/$(basename "$DEPLOYMENT_DIR")/index.html" "index.html"
+ln -s -f "../data/$(basename "$DEPLOYMENT_DIR")/favicon.png" "favicon.png"
+ln -s -f "../data/$(basename "$DEPLOYMENT_DIR")/logo.png" "logo.png"
 
 # Symlink the posts directory
 rm -f "posts"

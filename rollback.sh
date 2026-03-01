@@ -30,9 +30,11 @@ fi
 
 echo "Rolling back blog service to version: $PREVIOUS_VERSION..."
 
-# Update index symlink
+# Update symlinks
 cd "$HTML_DIR"
 ln -s -f "../data/$PREVIOUS_VERSION/index.html" "index.html"
+ln -s -f "../data/$PREVIOUS_VERSION/favicon.png" "favicon.png"
+ln -s -f "../data/$PREVIOUS_VERSION/logo.png" "logo.png"
 
 # Update posts symlink
 rm -f "posts"
