@@ -32,6 +32,7 @@ echo "Rolling back blog service to version: $PREVIOUS_VERSION..."
 
 # Update symlinks using absolute container paths
 cd "$HTML_DIR"
+rm -f "index.html" "favicon.png" "logo.png"
 ln -s -f "/usr/share/nginx/data/$PREVIOUS_VERSION/index.html" "index.html"
 ln -s -f "/usr/share/nginx/data/$PREVIOUS_VERSION/favicon.png" "favicon.png"
 ln -s -f "/usr/share/nginx/data/$PREVIOUS_VERSION/logo.png" "logo.png"
