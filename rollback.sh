@@ -2,7 +2,7 @@
 set -e
 
 # rollback.sh for blog service
-# Reverts the index.html, posts, and ContentsTable symlinks to the second latest version in the data directory.
+# Reverts the symlinks to the second latest version in the data directory.
 
 echo "------------------------------------------------"
 echo #
@@ -30,19 +30,19 @@ fi
 
 echo "Rolling back blog service to version: $PREVIOUS_VERSION..."
 
-# Update symlinks
+# Update symlinks using absolute container paths
 cd "$HTML_DIR"
-ln -s -f "../data/$PREVIOUS_VERSION/index.html" "index.html"
-ln -s -f "../data/$PREVIOUS_VERSION/favicon.png" "favicon.png"
-ln -s -f "../data/$PREVIOUS_VERSION/logo.png" "logo.png"
+ln -s -f "/usr/share/nginx/data/$PREVIOUS_VERSION/index.html" "index.html"
+ln -s -f "/usr/share/nginx/data/$PREVIOUS_VERSION/favicon.png" "favicon.png"
+ln -s -f "/usr/share/nginx/data/$PREVIOUS_VERSION/logo.png" "logo.png"
 
 # Update posts symlink
 rm -f "posts"
-ln -s -f "../data/$PREVIOUS_VERSION/posts" "posts"
+ln -s -f "/usr/share/nginx/data/$PREVIOUS_VERSION/posts" "posts"
 
 # Update ContentsTable symlink
 rm -f "ContentsTable"
-ln -s -f "../data/$PREVIOUS_VERSION/ContentsTable" "ContentsTable"
+ln -s -f "/usr/share/nginx/data/$PREVIOUS_VERSION/ContentsTable" "ContentsTable"
 
 echo "Rollback for blog service complete."
 echo "- - - - - - - - - - - - - - - - - - - - - - - -"

@@ -38,19 +38,20 @@ cp "$BUILD_DIR/logo.png" "$DEPLOYMENT_DIR/logo.png"
 echo "Moving done."
 echo #
 
-echo "Creating symlinks..."
+echo "Updating favicon and logo..."
+# Using absolute paths within the container for symlinks
 cd "$THIS_DIR/html"
-ln -s -f "../data/$(basename "$DEPLOYMENT_DIR")/index.html" "index.html"
-ln -s -f "../data/$(basename "$DEPLOYMENT_DIR")/favicon.png" "favicon.png"
-ln -s -f "../data/$(basename "$DEPLOYMENT_DIR")/logo.png" "logo.png"
+ln -s -f "/usr/share/nginx/data/$(basename "$DEPLOYMENT_DIR")/index.html" "index.html"
+ln -s -f "/usr/share/nginx/data/$(basename "$DEPLOYMENT_DIR")/favicon.png" "favicon.png"
+ln -s -f "/usr/share/nginx/data/$(basename "$DEPLOYMENT_DIR")/logo.png" "logo.png"
 
 # Symlink the posts directory
 rm -f "posts"
-ln -s -f "../data/$(basename "$DEPLOYMENT_DIR")/posts" "posts"
+ln -s -f "/usr/share/nginx/data/$(basename "$DEPLOYMENT_DIR")/posts" "posts"
 
 # Symlink the ContentsTable directory
 rm -f "ContentsTable"
-ln -s -f "../data/$(basename "$DEPLOYMENT_DIR")/ContentsTable" "ContentsTable"
+ln -s -f "/usr/share/nginx/data/$(basename "$DEPLOYMENT_DIR")/ContentsTable" "ContentsTable"
 echo "Symlinks created."
 echo #
 
