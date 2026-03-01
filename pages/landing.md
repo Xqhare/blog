@@ -9,10 +9,9 @@ description: "Welcome to my personal blog."
 
 Welcome to the place where I share my thoughts on software engineering, world-building, and wherever my mind wanders next.
 
-## Latest Posts
+You can find all posts [here](/ContentsTable/).
+
+## Latest Post
 
 [Latest Post Preview Placeholder]
 
-## Table of Contents
-
-You can find all posts [here](/ContentsTable/).
