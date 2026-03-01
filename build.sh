@@ -32,6 +32,14 @@ echo "Rebuilding global assets done."
 echo "- - - - - - - - - - - - - - - - - - - - - - - -"
 echo #
 
+# Read asset version for cache busting
+ASSET_VERSION="1"
+VERSION_FILE="$THIS_DIR/../global_assets/build/version.txt"
+if [ -f "$VERSION_FILE" ]; then
+    ASSET_VERSION=$(cat "$VERSION_FILE")
+    echo "Using asset version: $ASSET_VERSION"
+fi
+
 echo "Building blog post snippets..."
 ./build_snippets.sh
 echo "Blog post snippets built."
@@ -81,6 +89,7 @@ for post_dir in "$THIS_DIR/pages/posts/"*; do
 
             pandoc -f gfm -t html \
                 --template="$POST_TEMPLATE_FILE" \
+                --metadata asset_v="$ASSET_VERSION" \
                 --include-in-header="$STYLE_FILE" \
                 --include-before-body="$HEADER_FILE" \
                 --include-after-body="$FOOTER_FILE" \
@@ -124,6 +133,7 @@ fi
 
 pandoc -f gfm -t html \
     --template="$LANDING_TEMPLATE_FILE" \
+    --metadata asset_v="$ASSET_VERSION" \
     --include-in-header="$STYLE_FILE" \
     --include-before-body="$HEADER_FILE" \
     --include-after-body="$FOOTER_FILE" \
@@ -144,6 +154,7 @@ fi
 
 pandoc -f gfm -t html \
     --template="$LANDING_TEMPLATE_FILE" \
+    --metadata asset_v="$ASSET_VERSION" \
     --include-in-header="$STYLE_FILE" \
     --include-before-body="$HEADER_FILE" \
     --include-after-body="$FOOTER_FILE" \
